@@ -1,28 +1,48 @@
 <script>
+import dayjs from "dayjs";
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 export default {
-  setup() {
+  props: ['start','end'],
+  setup(props) {
     let tickInterval = null;
-
+    let percentage = ref(100);
 
     onMounted(() => {
       nextTick(() => {
         tickInterval = setInterval(() => {
-          //drawClock();
-        }, 1000);
+          const startTime = dayjs().hour(props.start.split(':')[0]).minute(props.start.split(':')[1]);
+          const endTime = dayjs().hour(props.end.split(':')[0]).minute(props.end.split(':')[1]);
+          const currentTime = dayjs()
+
+          if(currentTime.isBefore(startTime)){
+            return
+          }
+
+          if(currentTime.isAfter(endTime)){
+            percentage.value = 0;
+            clearInterval(tickInterval);
+            return
+          }
+
+          percentage.value = (endTime.diff(currentTime) / (endTime.diff(startTime))) * 100;
+        }, 100);
       });
     });
 
     onBeforeUnmount(() => {
       clearInterval(tickInterval);
     });
+
+    return {
+      percentage
+    }
   },
 };
 </script>
 
 <template>
-  <div class="circle-diagram" style="--percent: 50">
+  <div class="circle-diagram">
     <div class="center">
       <slot></slot>
     </div>
@@ -31,9 +51,9 @@ export default {
 
 <style>
 .circle-diagram{
+  --percent: v-bind(percentage);
   --degree: calc(360deg / 100 * var(--percent));
-  --hue: calc(360 / 100 * var(--percent));
-  --accent-color: hsl(var(--hue), 100%, 50%);
+  --accent-color: hsl(var(--percent), 100%, 50%);
   width: 100%;
   aspect-ratio: 1;
   position: relative;
