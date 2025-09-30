@@ -8,7 +8,22 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     vue(),
-    VitePWA({ registerType: 'autoUpdate' })
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Kids morning timers',
+        short_name: 'Kids morning timers',
+        description: 'Help your kids with their morning routine',
+        theme_color: '#000000',
+        icons: [
+          {
+            src: 'sunrise.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    })
   ],
   resolve: {
     alias: {
