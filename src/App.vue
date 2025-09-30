@@ -22,5 +22,8 @@ import Timer from "@/components/Timer.vue";
 <style scoped>
   main {
     width: 100vw;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 </style>

@@ -88,7 +88,7 @@ export default {
   position: absolute;
   border-radius: 50%;
   background-color: white;
-  inset: 4.5em;
+  inset: 18%;
   display: grid;
   place-items: center;
 }
