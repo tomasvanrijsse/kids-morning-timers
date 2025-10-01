@@ -29,7 +29,6 @@ export default {
 
           if(currentTime.isAfter(endTime)){
             percentage.value = 0;
-            clearInterval(tickInterval);
             return
           }
 
