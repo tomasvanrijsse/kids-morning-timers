@@ -8,11 +8,19 @@ export default {
     let tickInterval = null;
     let percentage = ref(100);
 
+    const startTime = dayjs()
+        .hour(props.start.split(':')[0])
+        .minute(props.start.split(':')[1])
+        .second(0);
+
+    const endTime = dayjs()
+        .hour(props.end.split(':')[0])
+        .minute(props.end.split(':')[1])
+        .second(0);
+
     onMounted(() => {
       nextTick(() => {
         tickInterval = setInterval(() => {
-          const startTime = dayjs().hour(props.start.split(':')[0]).minute(props.start.split(':')[1]);
-          const endTime = dayjs().hour(props.end.split(':')[0]).minute(props.end.split(':')[1]);
           const currentTime = dayjs()
 
           if(currentTime.isBefore(startTime)){
