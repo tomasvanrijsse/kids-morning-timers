@@ -1,39 +1,35 @@
 <script>
-import dayjs from "dayjs";
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import {dayTimestamp} from "@/helper.js";
 
 export default {
-  props: ['start','end'],
+  props: ['start','durationInSeconds'],
   setup(props) {
     let tickInterval = null;
     let percentage = ref(100);
 
-    const startTime = dayjs()
-        .hour(props.start.split(':')[0])
-        .minute(props.start.split(':')[1])
-        .second(0);
-
-    const endTime = dayjs()
-        .hour(props.end.split(':')[0])
-        .minute(props.end.split(':')[1])
-        .second(0);
-
     onMounted(() => {
       nextTick(() => {
         tickInterval = setInterval(() => {
-          const currentTime = dayjs()
+          const currentTime = dayTimestamp(
+              new Date().getHours(),
+              new Date().getMinutes(),
+              new Date().getSeconds(),
+          )
 
-          if(currentTime.isBefore(startTime)){
+          if(currentTime < props.start){
+            percentage.value = 100;
             return
           }
 
-          if(currentTime.isAfter(endTime)){
+          if(currentTime > props.start + props.durationInSeconds){
             percentage.value = 0;
             return
           }
 
-          percentage.value = (endTime.diff(currentTime) / (endTime.diff(startTime))) * 100;
-        }, 100);
+          const end = props.start + props.durationInSeconds
+          percentage.value = (end - currentTime) / props.durationInSeconds * 100;
+        }, 1000);
       });
     });
 

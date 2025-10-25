@@ -8,13 +8,6 @@ body {
   width: 100%;
 }
 
-main {
-  max-width: 100vh;
-  margin: 0 auto;
-  padding: 0.5rem;
-  font-weight: normal;
-}
-
 a,
 .green {
   text-decoration: none;
