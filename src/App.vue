@@ -7,21 +7,23 @@ const startTime = ref('07:15');
 const endTime = ref('08:15');
 
 const tasks = ref([
-  { name: 'Get dressed', 'image': './get-dressed.png' },
-  { name: 'Breakfast', 'image': './cereals.png' },
-  { name: 'Lunchbox', 'image': './lunchbox.png' },
-  { name: 'Put shoes on', 'image': './shoe.png' },
+  { name: 'Get dressed', 'image': './get-dressed.png', hidden: false },
+  { name: 'Breakfast', 'image': './cereals.png', hidden: false },
+  { name: 'Lunchbox', 'image': './lunchbox.png', hidden: false },
+  { name: 'Put shoes on', 'image': './shoe.png', hidden: false },
 ])
 
 const timers = computed(() => {
   const start = dayTimestamp(startTime.value.split(':')[0], startTime.value.split(':')[1])
   const end = dayTimestamp(endTime.value.split(':')[0], endTime.value.split(':')[1])
 
-  let durationPerTaskInSeconds = (end - start) / tasks.value.length;
+  let visibleTasks = tasks.value.filter((task) => { return task.hidden === false })
+
+  let durationPerTaskInSeconds = (end - start) / visibleTasks.length;
 
   let timers = [];
 
-  for (const [i, task] of tasks.value.entries()) {
+  for (const [i, task] of visibleTasks.entries()) {
     timers.push({ ...task,
       startTime: start + (durationPerTaskInSeconds * i),
       durationInSeconds: durationPerTaskInSeconds,
@@ -31,12 +33,24 @@ const timers = computed(() => {
   return timers;
 });
 
+const hideTimer = (timer) => {
+  for (const [i, task] of tasks.value.entries()) {
+    if(task.name !== timer.name) { continue }
+
+    task.hidden = true;
+  }
+}
+
 </script>
 
 <template>
   <main>
     <div id="timers">
-      <timer v-for="timer in timers" :start="timer.startTime" :durationInSeconds="timer.durationInSeconds">
+      <timer v-for="timer in timers"
+             :start="timer.startTime"
+             :durationInSeconds="timer.durationInSeconds"
+             @delete="hideTimer(timer)"
+      >
         <img :src="timer.image" :alt="timer.name">
       </timer>
     </div>

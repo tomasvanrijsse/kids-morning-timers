@@ -1,53 +1,51 @@
-<script>
+<script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import {dayTimestamp} from "@/helper.js";
 
-export default {
-  props: ['start','durationInSeconds'],
-  setup(props) {
-    let tickInterval = null;
-    let percentage = ref(100);
+const showDeleteButton = ref(false);
 
-    onMounted(() => {
-      nextTick(() => {
-        tickInterval = setInterval(() => {
-          const currentTime = dayTimestamp(
-              new Date().getHours(),
-              new Date().getMinutes(),
-              new Date().getSeconds(),
-          )
+const props = defineProps(['start','durationInSeconds']);
 
-          if(currentTime < props.start){
-            percentage.value = 100;
-            return
-          }
+let tickInterval = null;
+let percentage = ref(100);
 
-          if(currentTime > props.start + props.durationInSeconds){
-            percentage.value = 0;
-            return
-          }
+onMounted(() => {
+  nextTick(() => {
+    tickInterval = setInterval(() => {
+      const currentTime = dayTimestamp(
+          new Date().getHours(),
+          new Date().getMinutes(),
+          new Date().getSeconds(),
+      )
 
-          const end = props.start + props.durationInSeconds
-          percentage.value = (end - currentTime) / props.durationInSeconds * 100;
-        }, 1000);
-      });
-    });
+      if(currentTime < props.start){
+        percentage.value = 100;
+        return
+      }
 
-    onBeforeUnmount(() => {
-      clearInterval(tickInterval);
-    });
+      if(currentTime > props.start + props.durationInSeconds){
+        percentage.value = 0;
+        return
+      }
 
-    return {
-      percentage
-    }
-  },
-};
+      const end = props.start + props.durationInSeconds
+      percentage.value = (end - currentTime) / props.durationInSeconds * 100;
+    }, 1000);
+  });
+});
+
+onBeforeUnmount(() => {
+  clearInterval(tickInterval);
+});
 </script>
 
 <template>
-  <div class="circle-diagram">
+  <div class="circle-diagram" v-on:click="showDeleteButton = !showDeleteButton">
     <div class="center">
       <slot></slot>
+    </div>
+    <div class="delete" v-show="showDeleteButton" @click="$emit('delete')">
+      <img src="/delete.png" alt="delete" />
     </div>
   </div>
 </template>
@@ -113,6 +111,18 @@ export default {
   background-color: white;
   inset: 18%;
   display: grid;
+  place-items: center;
+}
+
+.delete {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  background-color: white;
   place-items: center;
 }
 </style>
