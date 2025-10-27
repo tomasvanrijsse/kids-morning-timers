@@ -41,6 +41,12 @@ const hideTimer = (timer) => {
   }
 }
 
+try {
+  navigator.wakeLock.request("screen");
+} catch (err) {
+  // The Wake Lock request has failed - usually system-related, such as battery.
+}
+
 </script>
 
 <template>
