@@ -51,6 +51,9 @@ try {
 
 <template>
   <main>
+    <div id="weather">
+      <a class="weatherwidget-io" href="https://forecast7.com/nl/51d834d83/hardinxveld-giessendam/" data-mode="Current" data-theme="dark" >Hardinxveld-Giessendam, Netherlands</a>
+    </div>
     <div id="timers">
       <timer v-for="timer in timers"
              :start="timer.startTime"
@@ -84,6 +87,11 @@ try {
     display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 1fr;
+  }
+
+  #weather {
+    position: absolute;
+    width: 120px;
   }
 
   #settings {
