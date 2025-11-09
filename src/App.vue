@@ -98,6 +98,7 @@ try {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
+    color: #777;
   }
 
   #settings .field {
@@ -108,5 +109,14 @@ try {
   }
   #settings input {
     width: 100px;
+    color: #999;
+    background-color: #333;
+    border: 1px solid #777;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    cursor: pointer;
   }
 </style>
