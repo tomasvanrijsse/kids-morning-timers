@@ -72,6 +72,11 @@ try {
         <label>End Time</label>
         <input type="time" v-model="endTime">
       </div>
+      <ul id="hidden-tasks">
+        <li v-for="task in tasks" v-show="task.hidden" @click="task.hidden = false">
+         ← {{ task.name }}
+        </li>
+      </ul>
     </div>
   </main>
 </template>
@@ -118,5 +123,15 @@ try {
     font-family: Arial, sans-serif;
     text-align: center;
     cursor: pointer;
+  }
+
+  #hidden-tasks {
+    list-style-type: none;
+    padding: 0;
+    margin: 0.5em;
+  }
+
+  #hidden-tasks li {
+    text-align: right;
   }
 </style>
