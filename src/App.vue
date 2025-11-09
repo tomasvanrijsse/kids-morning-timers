@@ -6,10 +6,13 @@ import {dayTimestamp} from "@/helper.js";
 const startTime = ref('07:15');
 const endTime = ref('08:15');
 
+const itsWednesday = new Date().getDay() === 4;
+
 const tasks = ref([
   { name: 'Get dressed', 'image': './get-dressed.png', hidden: false },
   { name: 'Breakfast', 'image': './cereals.png', hidden: false },
-  { name: 'Lunchbox', 'image': './lunchbox.png', hidden: false },
+  { name: 'Lunchbox', 'image': './lunchbox.png', hidden: itsWednesday },
+  { name: 'Fruits', 'image': './fruits.png', hidden: !itsWednesday },
   { name: 'Put shoes on', 'image': './shoe.png', hidden: false },
 ])
 
