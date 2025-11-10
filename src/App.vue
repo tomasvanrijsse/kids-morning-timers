@@ -55,7 +55,9 @@ try {
 <template>
   <main>
     <div id="weather">
-      <a class="weatherwidget-io" href="https://forecast7.com/nl/51d834d83/hardinxveld-giessendam/" data-mode="Current" data-theme="dark" >Hardinxveld-Giessendam, Netherlands</a>
+      <div id="id1464fc5083c2a" a='{"t":"v","v":"1.2","lang":"nl","locs":[24],"ssot":"c","sics":"ds","cbkg":"#000000","cfnt":"rgba(221,221,221,1)","cprb":"#000000","cprf":"rgba(221,221,221,1)","sfnt":"a","ent":"bool","eev":"bool","ewc":"bool","eln":"bool","slbr":0,"slmw":200,"ewi":"bool","etp":"bool","ephw":"bool"}'>
+        Weergegevensbron: <a href="https://weerlabs.nl/weer_dordrecht/week/">weer in Dordrecht deze week</a>
+      </div>
     </div>
     <div id="timers">
       <timer v-for="timer in timers"
@@ -99,7 +101,7 @@ try {
 
   #weather {
     position: absolute;
-    width: 120px;
+    width: 220px;
   }
 
   #settings {
