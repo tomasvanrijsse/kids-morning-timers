@@ -1,6 +1,7 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import {dayTimestamp} from "@/helper.js";
+import { useTimerSounds } from '@/composables/useTimerSounds.js';
 
 const showDeleteButton = ref(false);
 
@@ -8,6 +9,14 @@ const props = defineProps(['start','durationInSeconds']);
 
 let tickInterval = null;
 let percentage = ref(100);
+
+const { checkWarnings, reset: resetSounds } = useTimerSounds(
+  props.durationInSeconds
+);
+
+watch([() => props.start, () => props.durationInSeconds], () => {
+  resetSounds();
+});
 
 onMounted(() => {
   nextTick(() => {
@@ -20,16 +29,21 @@ onMounted(() => {
 
       if(currentTime < props.start){
         percentage.value = 100;
+        resetSounds();
         return
       }
 
       if(currentTime > props.start + props.durationInSeconds){
         percentage.value = 0;
+        resetSounds();
         return
       }
 
       const end = props.start + props.durationInSeconds
-      percentage.value = (end - currentTime) / props.durationInSeconds * 100;
+      const remainingSeconds = end - currentTime;
+      percentage.value = remainingSeconds / props.durationInSeconds * 100;
+
+      checkWarnings(remainingSeconds);
     }, 1000);
   });
 });
