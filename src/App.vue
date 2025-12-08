@@ -6,7 +6,24 @@ import {dayTimestamp} from "@/helper.js";
 const startTime = ref('07:15');
 const endTime = ref('08:15');
 
-const itsWednesday = new Date().getDay() === 4;
+const setStartToNow = () => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  startTime.value = `${hours}:${minutes}`;
+
+  setEndToFinishInOneHour();
+};
+
+const setEndToFinishInOneHour = () => {
+  const now = new Date();
+  now.setHours(now.getHours() + 1);
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  endTime.value = `${hours}:${minutes}`;
+};
+
+const itsWednesday = new Date().getDay() === 3;
 
 const tasks = ref([
   { name: 'Get dressed', 'image': './get-dressed.png', hidden: false },
@@ -71,6 +88,7 @@ try {
     <div id="settings">
       <div class="field">
         <label>Start Time</label>
+        <button @click="setStartToNow">Nu</button>
         <input type="time" v-model="startTime">
       </div>
       <div class="field">
@@ -128,6 +146,23 @@ try {
     font-family: Arial, sans-serif;
     text-align: center;
     cursor: pointer;
+  }
+
+  #settings button {
+    margin-right: 10px;
+    color: #999;
+    background-color: #333;
+    border: 1px solid #777;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+  }
+
+  #settings button:hover {
+    background-color: #444;
+    color: #bbb;
   }
 
   #hidden-tasks {
