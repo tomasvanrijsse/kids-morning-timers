@@ -9,8 +9,34 @@ const SOUND_CONFIG = {
   1:  { frequency: 1000, duration: 150, count: 3 },  // Hoogste (3x)
 };
 
-function playBeep(frequency, duration, count = 1) {
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// Shared singleton AudioContext voor alle timer sounds
+// Dit voorkomt iOS Safari problemen met audio autoplay policies
+let audioContext = null;
+
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+
+// Publieke functie om audio context te initialiseren/unlocken
+// Moet aangeroepen worden vanuit een user gesture (click/touch) voor iOS Safari
+export function initAudioContext() {
+  const ctx = getAudioContext();
+  if (ctx.state === 'suspended') {
+    return ctx.resume();
+  }
+  return Promise.resolve();
+}
+
+async function playBeep(frequency, duration, count = 1) {
+  const audioContext = getAudioContext();
+
+  // Defensive: zorg dat context running is (iOS kan deze suspenden)
+  if (audioContext.state === 'suspended') {
+    await audioContext.resume();
+  }
 
   const playOnce = async () => {
     const oscillator = audioContext.createOscillator();
@@ -32,11 +58,9 @@ function playBeep(frequency, duration, count = 1) {
   };
 
   // Speel sequentieel voor multi-beep waarschuwingen
-  (async () => {
-    for (let i = 0; i < count; i++) {
-      await playOnce();
-    }
-  })();
+  for (let i = 0; i < count; i++) {
+    await playOnce();
+  }
 }
 
 export function useTimerSounds(durationInSeconds) {

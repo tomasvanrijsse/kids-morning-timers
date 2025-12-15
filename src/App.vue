@@ -1,7 +1,8 @@
 <script setup>
 import Timer from "@/components/Timer.vue";
-import {computed, ref} from "vue";
+import {computed, ref, onMounted} from "vue";
 import {dayTimestamp} from "@/helper.js";
+import {initAudioContext} from "@/composables/useTimerSounds.js";
 
 const startTime = ref('07:15');
 const endTime = ref('08:15');
@@ -60,6 +61,19 @@ const hideTimer = (timer) => {
     task.hidden = true;
   }
 }
+
+// Global handler om audio te unlocken voor iOS Safari
+// iOS Safari vereist dat AudioContext wordt geactiveerd door een user gesture
+// Deze handler vangt de eerste click/touch op en unlocked de audio context
+onMounted(() => {
+  const unlockAudio = () => {
+    initAudioContext();
+  };
+
+  // Luister naar eerste click of touch (iOS gebruikt touch events)
+  document.addEventListener('click', unlockAudio, { once: true });
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+});
 
 try {
   navigator.wakeLock.request("screen");
