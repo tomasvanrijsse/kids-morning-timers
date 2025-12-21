@@ -10,9 +10,7 @@ const props = defineProps(['start','durationInSeconds']);
 let tickInterval = null;
 let percentage = ref(100);
 
-const { checkWarnings, reset: resetSounds } = useTimerSounds(
-  props.durationInSeconds
-);
+const { checkWarnings, reset: resetSounds } = useTimerSounds();
 
 watch([() => props.start, () => props.durationInSeconds], () => {
   resetSounds();
